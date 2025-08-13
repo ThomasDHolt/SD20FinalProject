@@ -9,7 +9,7 @@ export default function StepOne({ nextStep, data, handleChange }) {
 	// fetch from different api routes for different data for each step
 	useEffect(() => {
 		async function fetchData() {
-			const res = await fetch(`/api`);
+			const res = await fetch(`/api/one`);
 			const { categories } = await res.json();
 			setOptions(categories);
 
