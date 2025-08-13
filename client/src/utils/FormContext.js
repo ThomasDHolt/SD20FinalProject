@@ -1,26 +1,26 @@
-'use client';
+// 'use client';
 
-import { createContext, useContext, useState } from 'react';
+// import { createContext, useContext, useState } from 'react';
 
-export const NewFormPropertyContext = createContext({
-	user: null,
-	updatePropertyForm: () => null,
-});
+// export const FormContext = createContext({
+// 	user: null,
+// 	updateUserData: () => null,
+// });
 
-export function FormContextProvider({ children }) {
-	const [user, setUser] = useState(null);
+// export function FormContextProvider({ children }) {
+// 	const [user, setUser] = useState(null);
 
-	const updateUserData = (values) => {
-		setUser({ ...user, ...values });
-	};
+// 	const updateUserData = (values) => {
+// 		setUser({ ...user, ...values });
+// 	};
 
-	return (
-		<NewFormContext.Provider value={{ user, updateUserData }}>
-			{children}
-		</NewFormContext.Provider>
-	);
-}
+// 	return (
+// 		<FormContext.Provider value={{ user, updateUserData }}>
+// 			{children}
+// 		</FormContext.Provider>
+// 	);
+// }
 
-export function useNewFormContext() {
-	return useContext(NewFormPropertyContext);
-}
+// export function useFormContext() {
+// 	return useContext(FormContext);
+// }
