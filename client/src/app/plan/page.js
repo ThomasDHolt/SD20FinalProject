@@ -3,13 +3,11 @@
 import { useState } from 'react';
 
 import StepOne from '@/components/StepOne';
-import StepTwo from '@/components/StepTwo';
+// import StepTwo from '@/components/StepTwo';
 
 export default function WorkoutForm() {
 	const [currentStep, setCurrentStep] = useState(0);
 	const [formData, setFormData] = useState({});
-
-	// const [change, setChange] = useState({});
 
 	function nextStep(values) {
 		setFormData({ ...formData, ...values });
@@ -26,9 +24,17 @@ export default function WorkoutForm() {
 		console.log('Full form completed!', { ...formData, ...values });
 	}
 
-	// ! handleChange
-	function handleChange(values) {
-		setFormData({ ...formData, ...values });
+	// ! handleChange 2
+	// function handleChange(values) {
+	// 	setFormData({ ...formData, ...values });
+	// }
+
+	function handleChange(e) {
+		const { name, value } = e.target;
+		setFormData({
+			...formData,
+			[name]: value,
+		});
 	}
 
 	const formSteps = [
@@ -38,14 +44,15 @@ export default function WorkoutForm() {
 				data={formData}
 				handleChange={handleChange}
 			/>
-			<StepTwo nextStep={nextStep} data={formData} prevStep={prevStep} />
+			{/* <StepTwo nextStep={nextStep} data={formData} prevStep={prevStep} /> */}
 		</>,
 	];
 
 	return (
 		<main>
-			<p>{currentStep} of 3</p>
-			{formSteps[currentStep]}
+			<div className="bg-amber-800">{formSteps[currentStep]}</div>
+
+			<p>{currentStep + 1} of 3</p>
 		</main>
 	);
 }

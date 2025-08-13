@@ -1,37 +1,30 @@
 import { db } from '@/utils/db_conn';
+import { NextResponse, NextRequest } from 'next/server';
 
-export async function GET(res) {
+export async function GET() {
 	try {
-		const categories = (await db.query(`SELECT * FROM exercise_type`)).rows;
-		res.status(200).json({ categories });
+		const categories = (await db.query(`SELECT * FROM exercise_category`))
+			.rows;
+
+		// console.log(categories);
+		return NextResponse.json({ categories });
 	} catch (err) {
-		res.status(500).json({ error: 'Failed to connect to database' });
+		return NextResponse.json({ error: err.message });
 	}
 }
 
 export async function POST(req) {
-	const category = await req.json;
-
 	// create a table in DB for user created workout plans
+	// replace values
 	try {
-		const entries = await db.query(
-			'INSERT INTO plan (category) VALUES ($1)',
-			[category]
+		const { values } = await req.body;
+		const formData = await db.query(
+			'INSERT INTO plan (values) VALUES ($1)',
+			[values]
 		);
 
-		res.status(201).send({ entries });
+		return NextResponse.json({ formData });
 	} catch (err) {
-		res.status(500).send({ error: 'Failed to POST data' });
+		return NextResponse.json({ error: 'Failed to POST data' });
 	}
 }
-
-// try {
-// 	const { name, image, creators, aliases, partnerships } = req.body;
-// 	const formData = await db.query(
-// 		`INSERT INTO heroes (name, image, creators, aliases, partnerships) VALUES ($1, $2, $3, $4, $5)`,
-// 		[name, image, creators, aliases, partnerships]
-// 	);
-// 	res.status(201).json('New post created');
-// } catch (err) {
-// 	res.status(500).json({ error: err });
-// }

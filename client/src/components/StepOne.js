@@ -9,9 +9,11 @@ export default function StepOne({ nextStep, data, handleChange }) {
 	// fetch from different api routes for different data for each step
 	useEffect(() => {
 		async function fetchData() {
-			const res = await fetch(`http://localhost:3000/api`);
-			const categories = await res.json();
+			const res = await fetch(`/api`);
+			const { categories } = await res.json();
 			setOptions(categories);
+
+			console.log(categories);
 		}
 
 		fetchData();
@@ -28,7 +30,7 @@ export default function StepOne({ nextStep, data, handleChange }) {
 							type="radio"
 							name="type"
 							aria-label={op.type}
-							value={op.type}
+							value={data.type}
 							onChange={handleChange}
 						/>
 						<label htmlFor={op.type}>{op.type}</label>
