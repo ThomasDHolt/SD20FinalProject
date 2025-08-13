@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import StepOne from '@/components/StepOne';
-// import StepTwo from '@/components/StepTwo';
+import StepTwo from '@/components/StepTwo';
 
 export default function WorkoutForm() {
 	const [currentStep, setCurrentStep] = useState(0);
@@ -15,7 +15,9 @@ export default function WorkoutForm() {
 	}
 
 	function prevStep() {
-		setCurrentStep(currentStep - 1);
+		if (currentStep != 0) {
+			setCurrentStep(currentStep - 1);
+		}
 	}
 
 	function handleSubmit(values) {
@@ -38,14 +40,19 @@ export default function WorkoutForm() {
 	}
 
 	const formSteps = [
-		<>
-			<StepOne
-				nextStep={nextStep}
-				data={formData}
-				handleChange={handleChange}
-			/>
-			{/* <StepTwo nextStep={nextStep} data={formData} prevStep={prevStep} /> */}
-		</>,
+		<StepOne
+			nextStep={nextStep}
+			data={formData}
+			handleChange={handleChange}
+			key={1}
+		/>,
+		<StepTwo
+			nextStep={nextStep}
+			data={formData}
+			handleChange={handleChange}
+			prevStep={prevStep}
+			key={2}
+		/>,
 	];
 
 	return (
