@@ -9,6 +9,8 @@ export default function WorkoutForm() {
 	const [currentStep, setCurrentStep] = useState(0);
 	const [formData, setFormData] = useState({});
 
+	// const [change, setChange] = useState({});
+
 	function nextStep(values) {
 		setFormData({ ...formData, ...values });
 		setCurrentStep(currentStep + 1);
@@ -24,9 +26,18 @@ export default function WorkoutForm() {
 		console.log('Full form completed!', { ...formData, ...values });
 	}
 
+	// ! handleChange
+	function handleChange(values) {
+		setFormData({ ...formData, ...values });
+	}
+
 	const formSteps = [
 		<>
-			<StepOne nextStep={nextStep} data={formData} />
+			<StepOne
+				nextStep={nextStep}
+				data={formData}
+				handleChange={handleChange}
+			/>
 			<StepTwo nextStep={nextStep} data={formData} prevStep={prevStep} />
 		</>,
 	];

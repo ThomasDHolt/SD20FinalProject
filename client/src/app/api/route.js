@@ -12,6 +12,7 @@ export async function GET(res) {
 export async function POST(req) {
 	const category = await req.json;
 
+	// create a table in DB for user created workout plans
 	try {
 		const entries = await db.query(
 			'INSERT INTO plan (category) VALUES ($1)',
