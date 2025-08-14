@@ -31,7 +31,7 @@ export default function StepTwo({ nextStep, data, handleChange, prevStep }) {
 	let selected = options[currentIndex];
 
 	return (
-		<form onSubmit={nextStep}>
+		<form>
 			<div>
 				{options.map((op, index) => (
 					// check again to match DB or create a table
@@ -51,9 +51,13 @@ export default function StepTwo({ nextStep, data, handleChange, prevStep }) {
 				))}
 			</div>
 
-			{modal ? <DetailsModal exercise={selected.name} /> : null}
+			{modal ? (
+				<DetailsModal exercise={selected.name} save={handleChange} />
+			) : null}
 
-			<button type="submit">Next</button>
+			<button type="submit" onClick={nextStep}>
+				Next
+			</button>
 
 			<button type="button" onClick={prevStep}>
 				Back

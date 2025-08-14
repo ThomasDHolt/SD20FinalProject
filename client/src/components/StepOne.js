@@ -32,6 +32,7 @@ export default function StepOne({ nextStep, data, handleChange }) {
 							aria-label={op.type}
 							value={data.type}
 							onChange={handleChange}
+							required
 						/>
 						<label htmlFor={op.type}>{op.type}</label>
 					</div>

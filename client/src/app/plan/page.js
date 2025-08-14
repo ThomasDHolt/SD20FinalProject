@@ -37,6 +37,8 @@ export default function WorkoutForm() {
 			...formData,
 			[name]: value,
 		});
+
+		console.log(formData);
 	}
 
 	const formSteps = [

@@ -1,4 +1,4 @@
-export default function DetailsModal({ exercise }) {
+export default function DetailsModal({ exercise, save }) {
 	return (
 		<fieldset>
 			<legend>{exercise}</legend>
@@ -24,7 +24,9 @@ export default function DetailsModal({ exercise }) {
 				/>
 			</label>
 
-			<button aria-label="Save entries">Save</button>
+			<button aria-label="Save entries" onClick={save}>
+				Save
+			</button>
 		</fieldset>
 	);
 }
