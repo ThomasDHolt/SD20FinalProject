@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-  formatDate,
-  DateSelectArg,
-  EventClickArg,
-  EventApi,
-} from "@fullcalendar/core";
+import { formatDate, DateSelectArg, EventClickArg } from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -18,60 +13,56 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+interface CalendarEvent {
+  id: string;
+  title: string;
+  start: string;
+  end?: string;
+  allDay: boolean;
+}
+
 const Calendar: React.FC = () => {
-  const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [newEventTitle, setNewEventTitle] = useState<string>("");
+  const [currentEvents, setCurrentEvents] = useState<CalendarEvent[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newEventTitle, setNewEventTitle] = useState("");
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
 
-  // Fetch events from API on mount
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const res = await fetch("/api/events");
-        if (!res.ok) throw new Error("Failed to fetch events");
-        const data = await res.json();
-        setCurrentEvents(data);
-      } catch (err) {
-        console.error("Error fetching events:", err);
-      }
-    };
+  // Load events from DB
+  const fetchEvents = async () => {
+    try {
+      const res = await fetch("/api/events");
+      if (!res.ok) throw new Error("Failed to fetch events");
+      const data: CalendarEvent[] = await res.json();
+      setCurrentEvents(data);
+    } catch (err) {
+      console.error("Error fetching events:", err);
+    }
+  };
 
+  useEffect(() => {
     fetchEvents();
   }, []);
-
-  // Save events to API whenever they change
-  useEffect(() => {
-    if (currentEvents.length === 0) return; // Avoid sending empty list initially
-
-    const saveEvents = async () => {
-      try {
-        const res = await fetch("/api/events", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(currentEvents),
-        });
-        if (!res.ok) throw new Error("Failed to save events");
-      } catch (err) {
-        console.error("Error saving events:", err);
-      }
-    };
-
-    saveEvents();
-  }, [currentEvents]);
 
   const handleDateClick = (selected: DateSelectArg) => {
     setSelectedDate(selected);
     setIsDialogOpen(true);
   };
 
-  const handleEventClick = (selected: EventClickArg) => {
+  const handleEventClick = async (selected: EventClickArg) => {
     if (
       window.confirm(
-        `Are you sure you want to delete the event "${selected.event.title}"?`
+        `Are you sure you want to delete "${selected.event.title}"?`
       )
     ) {
-      selected.event.remove();
+      try {
+        const res = await fetch(`/api/events?id=${selected.event.id}`, {
+          method: "DELETE",
+        });
+        if (!res.ok) throw new Error("Failed to delete event");
+        await fetchEvents();
+      } catch (err) {
+        console.error("Error deleting event:", err);
+      }
     }
   };
 
@@ -80,21 +71,29 @@ const Calendar: React.FC = () => {
     setNewEventTitle("");
   };
 
-  const handleAddEvent = (e: React.FormEvent) => {
+  const handleAddEvent = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newEventTitle && selectedDate) {
-      const calendarApi = selectedDate.view.calendar;
-      calendarApi.unselect();
-
-      const newEvent = {
+      const newEvent: CalendarEvent = {
         id: `${selectedDate.start.toISOString()}-${newEventTitle}`,
         title: newEventTitle,
-        start: selectedDate.start,
-        end: selectedDate.end,
+        start: selectedDate.start.toISOString(),
+        end: selectedDate.end?.toISOString(),
         allDay: selectedDate.allDay,
       };
 
-      calendarApi.addEvent(newEvent);
+      try {
+        const res = await fetch("/api/events", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newEvent),
+        });
+        if (!res.ok) throw new Error("Failed to add event");
+        await fetchEvents();
+      } catch (err) {
+        console.error("Error adding event:", err);
+      }
+
       handleCloseDialog();
     }
   };
@@ -102,37 +101,37 @@ const Calendar: React.FC = () => {
   return (
     <div>
       <div className="flex w-full px-10 justify-start items-start gap-8">
+        {/* Sidebar */}
         <div className="w-3/12">
           <div className="py-10 text-2xl font-extrabold px-7">
             Calendar Events
           </div>
           <ul className="space-y-4">
-            {currentEvents.length <= 0 && (
+            {currentEvents.length === 0 && (
               <div className="italic text-center text-gray-400">
                 No Events Present
               </div>
             )}
-
-            {currentEvents.length > 0 &&
-              currentEvents.map((event: EventApi) => (
-                <li
-                  className="border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800"
-                  key={event.id}
-                >
-                  {event.title}
-                  <br />
-                  <label className="text-slate-950">
-                    {formatDate(event.start!, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </label>
-                </li>
-              ))}
+            {currentEvents.map((event) => (
+              <li
+                className="border border-gray-200 shadow px-4 py-2 rounded-md text-blue-800"
+                key={event.id}
+              >
+                {event.title}
+                <br />
+                <label className="text-slate-950">
+                  {formatDate(new Date(event.start), {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </label>
+              </li>
+            ))}
           </ul>
         </div>
 
+        {/* Calendar */}
         <div className="w-9/12 mt-8">
           <FullCalendar
             height={"85vh"}
@@ -143,18 +142,18 @@ const Calendar: React.FC = () => {
               right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
             }}
             initialView="dayGridMonth"
-            editable={true}
+            editable={false}
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}
             select={handleDateClick}
             eventClick={handleEventClick}
-            eventsSet={(events) => setCurrentEvents(events)}
-            initialEvents={[]} // No localStorage — will be fetched via API
+            events={currentEvents} // Load from DB
           />
         </div>
       </div>
 
+      {/* Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
