@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-export default function StepOne({ nextStep, data, handleChange }) {
+export default function StepOne({ nextStep, formData, handleChange }) {
 	const [options, setOptions] = useState([]);
-	// check to match DB (into a user made workout plan -- make new table)
 
 	// fetch from different api routes for different data for each step
 	useEffect(() => {
@@ -20,18 +19,26 @@ export default function StepOne({ nextStep, data, handleChange }) {
 	}, []);
 
 	return (
-		<form onSubmit={nextStep}>
+		<form
+			onSubmit={(e) => {
+				e.preventDefault();
+				nextStep();
+			}}
+		>
 			<div>
 				{options.map((op) => (
-					// check again to match DB or create a table
-					// ! value = id ?? match DB
 					<div key={op.id}>
 						<input
 							type="radio"
-							name="type"
+							name="category"
 							aria-label={op.type}
-							value={op.type}
-							onChange={handleChange}
+							value={op.id}
+							onChange={(e) =>
+								handleChange({
+									categoryId: Number(e.target.value),
+								})
+							}
+							checked={formData.categoryId === op.id}
 							required
 						/>
 						<label htmlFor={op.type}>{op.type}</label>
