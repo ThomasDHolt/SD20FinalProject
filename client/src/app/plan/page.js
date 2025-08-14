@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
 
@@ -26,7 +26,7 @@ export default function WorkoutForm() {
 		console.log('Full form completed!', { ...formData, ...values });
 	}
 
-	// ! handleChange 2
+	//  handleChange 2
 	// function handleChange(values) {
 	// 	setFormData({ ...formData, ...values });
 	// }
