@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import DetailsModal from './DetailsModal';
+
 export default function StepTwo({ nextStep, data, handleChange, prevStep }) {
 	const [options, setOptions] = useState([]);
 
@@ -18,26 +20,38 @@ export default function StepTwo({ nextStep, data, handleChange, prevStep }) {
 		fetchData();
 	}, []);
 
+	const [modal, setModal] = useState(false);
+	const [currentIndex, setCurrentIndex] = useState(0);
+
+	function handleClick(index) {
+		setModal(!modal);
+		setCurrentIndex(index);
+	}
+
+	let selected = options[currentIndex];
+
 	return (
 		<form onSubmit={nextStep}>
 			<div>
-				{options.map((op) => (
+				{options.map((op, index) => (
 					// check again to match DB or create a table
 					// ! value = id ?? match DB
-					<div key={op.id}>
+					<div key={index}>
 						<input
-							type="radio"
+							type="checkbox"
 							name="name"
 							aria-label={op.name}
 							value={data.name}
-							onChange={handleChange}
-							multiple
-							max={5}
+							onClick={() => handleClick(index)}
+							// onChange={handleChange}
+							// onChange={() => handleClick()}
 						/>
 						<label htmlFor={op.name}>{op.name}</label>
 					</div>
 				))}
 			</div>
+
+			{modal ? <DetailsModal exercise={selected.name} /> : null}
 
 			<button type="submit">Next</button>
 
