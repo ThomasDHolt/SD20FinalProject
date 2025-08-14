@@ -24,7 +24,7 @@ export default function DetailsModal({ exercise, save }) {
 				/>
 			</label>
 
-			<button aria-label="Save entries" onClick={save}>
+			<button type="button" aria-label="Save entries" onClick={save}>
 				Save
 			</button>
 		</fieldset>

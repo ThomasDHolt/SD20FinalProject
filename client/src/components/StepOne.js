@@ -30,7 +30,7 @@ export default function StepOne({ nextStep, data, handleChange }) {
 							type="radio"
 							name="type"
 							aria-label={op.type}
-							value={data.type}
+							value={op.type}
 							onChange={handleChange}
 							required
 						/>

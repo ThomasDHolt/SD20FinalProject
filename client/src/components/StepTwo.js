@@ -39,9 +39,9 @@ export default function StepTwo({ nextStep, data, handleChange, prevStep }) {
 					<div key={index}>
 						<input
 							type="checkbox"
-							name="name"
+							name="exercises"
 							aria-label={op.name}
-							value={data.name}
+							value={op.name}
 							onClick={() => handleClick(index)}
 							// onChange={handleChange}
 							// onChange={() => handleClick()}
