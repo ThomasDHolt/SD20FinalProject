@@ -41,12 +41,14 @@ export default function StepOne({ nextStep, formData, handleChange }) {
 							checked={formData.categoryId === op.id}
 							required
 						/>
-						<label htmlFor={op.type}>{op.type}</label>
+						<label className='text-2xl ml-[20px]' htmlFor={op.type}>{op.type}</label>
 					</div>
 				))}
 			</div>
 
-			<button type="submit">Next</button>
+			<div className='flex justify-center'>
+				<button className='bg-green-400 hover:bg-green-300 text-2xl text-black p-[10px] min-w-[100px] rounded-4xl' type="submit">Next</button>
+			</div>
 		</form>
 	);
 }

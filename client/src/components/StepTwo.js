@@ -51,7 +51,7 @@ export default function StepTwo({ finish, data, handleChange, prevStep }) {
 							onChange={() => toggleexercises(op.id)}
 							onClick={() => handleClick(index)}
 						/>
-						<label htmlFor={op.name}>{op.name}</label>
+						<label className='text-2xl ml-[20px]' htmlFor={op.name}>{op.name}</label>
 					</div>
 				))}
 			</div>
@@ -60,11 +60,10 @@ export default function StepTwo({ finish, data, handleChange, prevStep }) {
 				<DetailsModal exercise={selected.name} save={handleChange} />
 			) : null}
 
-			<button type="submit">Next</button>
-
-			<button type="button" onClick={prevStep}>
-				Back
-			</button>
+			<div className='flex justify-center'>
+				<button className='bg-green-400 hover:bg-green-300 text-2xl text-black p-[10px] min-w-[100px] mr-[2px] rounded-l-4xl' type="submit">Next</button>
+				<button className='bg-red-400 hover:bg-red-300 text-2xl text-black p-[10px] min-w-[100px] ml-[2px] rounded-r-4xl' type="button" onClick={prevStep}>Back</button>
+			</div>
 		</form>
 	);
 }
