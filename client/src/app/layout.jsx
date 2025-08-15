@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
                 <UserButton />
               </SignedIn>
             </header>
-            <h1 className="flex items-center justify-center">
+            <h1 className="flex items-center justify-center text-5xl font-bold">
               Welcome, To the World of Fitness
             </h1>
             {children}

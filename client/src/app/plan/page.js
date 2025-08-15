@@ -78,9 +78,11 @@ export default function WorkoutForm() {
 
 	return (
 		<main>
-			<div className="bg-amber-800">{formSteps[currentStep]}</div>
+			<div className='flex flex-col items-center'>
+				<div className="bg-gray-800 w-[90vw] p-[10px] m-[20px] rounded-3xl">{formSteps[currentStep]}</div>
 
-			<p>{currentStep + 1} of 3</p>
+				<p className='text-2xl'>{currentStep + 1} of 3</p>
+			</div>
 		</main>
 	);
 }
